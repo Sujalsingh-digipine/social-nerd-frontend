@@ -6,8 +6,7 @@ const Layout = () => {
   const location = useLocation();
   const isAuthRoute =
     location.pathname.includes("/login") ||
-    location.pathname.includes("/signup") ||
-    location.pathname.includes("/role");
+    location.pathname.includes("/register");
 
   if (isAuthRoute) {
     return <App />;

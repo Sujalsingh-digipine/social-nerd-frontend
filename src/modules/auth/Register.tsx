@@ -5,7 +5,6 @@ import "antd/dist/reset.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-
 const RegisterSchema = Yup.object().shape({
   username: Yup.string().min(3).required("Username is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -87,7 +86,7 @@ export default function RegisterForm() {
                   <Field
                     type="text"
                     name="username"
-                     placeholder="john doe"
+                    placeholder="Eg. john doe"
                     className="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                   />
                   <ErrorMessage
@@ -103,7 +102,7 @@ export default function RegisterForm() {
                   </label>
                   <Field
                     type="email"
-                     placeholder="Eg:johndoe@example.com"
+                    placeholder="Eg:johndoe@example.com"
                     name="email"
                     className="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                   />
@@ -121,7 +120,7 @@ export default function RegisterForm() {
                   <Field
                     type="password"
                     name="password"
-                     placeholder="******"
+                    placeholder="******"
                     className="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                   />
                   <ErrorMessage
@@ -137,7 +136,7 @@ export default function RegisterForm() {
                   </label>
                   <Field
                     type="password"
-                     placeholder="******"
+                    placeholder="******"
                     name="confirmPassword"
                     className="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                   />

@@ -1,4 +1,4 @@
-import { Reaction } from "../@enums/Reaction.enum";
+import { Reaction } from "../@enums/reaction.enum";
 
 declare global {
   // import { UserType } from "../../user/@types/user";

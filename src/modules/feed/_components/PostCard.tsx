@@ -13,7 +13,7 @@ import {
 import { CommentOutlined, HeartOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Reaction } from "../@enums/Reaction.enum";
+import { Reaction } from "../@enums/reaction.enum";
 
 const { Text } = Typography;
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Spin } from "antd";
 import PostCard from "./_components/PostCard";
-import { fetchPosts } from "./@http/feed.http";
+import { _http_posts } from "./@http/feed.http";
 
 export default function HomeFeed() {
   const [posts, setPosts] = useState<PostType[]>([]);
@@ -10,8 +10,8 @@ export default function HomeFeed() {
   useEffect(() => {
     (async () => {
       try {
-        const data = await fetchPosts();
-        setPosts(data);
+        const response = await _http_posts._get_posts();
+        setPosts(response.data.items);
       } catch (err) {
         console.error("Error fetching posts", err);
       } finally {

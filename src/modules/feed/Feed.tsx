@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Spin } from "antd";
 import PostCard from "./_components/PostCard";
-import { fetchPosts } from "./@http/api";
-import { PostType } from "./@types/post";
+import { fetchPosts } from "./@http/feed.http";
 
 export default function HomeFeed() {
   const [posts, setPosts] = useState<PostType[]>([]);

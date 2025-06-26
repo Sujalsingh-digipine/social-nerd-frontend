@@ -15,7 +15,7 @@ const initialValues = {
 };
 
 export default function Login() {
-  const { alert, showAlert, hideAlert } = useAlert(); 
+  const { alert, showAlert, hideAlert } = useAlert();
   const navigate = useNavigate();
 
   const handleSubmit = async (
@@ -24,14 +24,14 @@ export default function Login() {
   ) => {
     try {
       console.log("Logging in with:", values);
-      showAlert("success", "Login successful!"); 
+      showAlert("success", "Login successful!");
       resetForm();
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
-      showAlert("error", "Something went wrong"); 
+      showAlert("error", "Something went wrong");
     } finally {
-      setTimeout(() => hideAlert(), 3000); 
+      setTimeout(() => hideAlert(), 3000);
     }
   };
 
@@ -68,7 +68,7 @@ export default function Login() {
                   <Field
                     name="email"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="Eg:johndoe@example.com"
                     className="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                   />
                   <ErrorMessage
@@ -84,7 +84,7 @@ export default function Login() {
                   <Field
                     name="password"
                     type="password"
-                    placeholder="Enter your password"
+                    placeholder="******"
                     className="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                   />
                   <ErrorMessage

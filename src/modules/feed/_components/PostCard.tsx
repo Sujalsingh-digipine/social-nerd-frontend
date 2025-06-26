@@ -11,14 +11,14 @@ import {
   Carousel,
 } from "antd";
 import { CommentOutlined, HeartOutlined } from "@ant-design/icons";
-import { PostType, ReactionType } from "../@types/post";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Reaction } from "../@enums/Reaction.enum";
 
 const { Text } = Typography;
 
 export default function PostCard({ post }: { post: PostType }) {
-  const [reaction, setReaction] = useState<ReactionType | null>(
+  const [reaction, setReaction] = useState<Reaction | null>(
     post.reactions.userReaction || null
   );
   const [reactionSummary, setReactionSummary] = useState(post.reactions);
@@ -26,23 +26,6 @@ export default function PostCard({ post }: { post: PostType }) {
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState(post.comments);
   const [showReactions, setShowReactions] = useState(false);
-
-  const emojiReactions: ReactionType[] = [
-    "Like",
-    "Love",
-    "Haha",
-    "Wow",
-    "Sad",
-    "Angry",
-  ];
-  const emojiMap: Record<ReactionType, string> = {
-    Like: "👍",
-    Love: "❤️",
-    Haha: "😂",
-    Wow: "😮",
-    Sad: "😢",
-    Angry: "😡",
-  };
 
   const handleDefaultLike = () => {
     if (reaction) {
@@ -60,7 +43,7 @@ export default function PostCard({ post }: { post: PostType }) {
         };
       });
     } else {
-      const newReaction: ReactionType = "Like";
+      const newReaction = Reaction.Like;
       setReaction(newReaction);
       setReactionSummary((prev) => ({
         ...prev,
@@ -74,7 +57,7 @@ export default function PostCard({ post }: { post: PostType }) {
     }
   };
 
-  const handleEmojiReact = (emo: ReactionType) => {
+  const handleEmojiReact = (emo: Reaction) => {
     const previous = reaction;
     setReaction(emo);
     setReactionSummary((prev) => {
@@ -161,7 +144,7 @@ export default function PostCard({ post }: { post: PostType }) {
               onClick={handleDefaultLike}
             >
               {reaction ? (
-                <span className="text-xl">{emojiMap[reaction]}</span>
+                <span className="text-xl">{reaction}</span>
               ) : (
                 <HeartOutlined />
               )}{" "}
@@ -177,14 +160,14 @@ export default function PostCard({ post }: { post: PostType }) {
                   transition={{ duration: 0.2 }}
                   className="absolute bottom-8 left-0 flex gap-2 bg-white p-2 rounded-full shadow-lg z-10"
                 >
-                  {emojiReactions.map((emo) => (
+                  {Object.values(Reaction).map((emoji) => (
                     <motion.div
-                      key={emo}
+                      key={emoji}
                       whileHover={{ scale: 1.3 }}
-                      onClick={() => handleEmojiReact(emo)}
+                      onClick={() => handleEmojiReact(emoji as Reaction)}
                       className="cursor-pointer text-xl"
                     >
-                      {emojiMap[emo]}
+                      {emoji}
                     </motion.div>
                   ))}
                 </motion.div>

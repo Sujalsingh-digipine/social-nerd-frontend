@@ -1,11 +1,10 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Alert,Button } from "antd";
+import { Alert, Button } from "antd";
 import "antd/dist/reset.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 // import { Button } from "antd/es/radio";
-
 
 const RegisterSchema = Yup.object().shape({
   username: Yup.string().min(3).required("Username is required"),
@@ -159,7 +158,7 @@ export default function RegisterForm() {
                 <p className="mt-10 text-center text-sm text-gray-500">
                   Already a member?{" "}
                   <Link
-                    to="/login"
+                    to="/auth/login"
                     className="font-semibold text-pink-600 hover:text-pink-500"
                   >
                     Sign in

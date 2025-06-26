@@ -15,7 +15,7 @@ const Navbar = () => {
         break
       case "logout":
         localStorage.clear()
-        navigate("/login")
+        navigate("/auth/login")
         break
     }
   }

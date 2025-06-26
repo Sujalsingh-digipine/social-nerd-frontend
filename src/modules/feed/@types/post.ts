@@ -1,16 +1,28 @@
-export interface UserType {
-  id: string;
-  name: string;
-  avatar: string;
+import { UserType } from "../../user/@types/user";
+
+export type ReactionType = "Like" | "Love" | "Haha" | "Wow" | "Sad" | "Angry";
+
+export interface ReactionSummary {
+  total: number;
+  typeCount: Partial<Record<ReactionType, number>>; 
+  userReaction?: ReactionType; 
+}
+
+export interface CommentType {
+  _id: string;
+  user: UserType | string;
+  text: string;
+  parentId?: string;
+  createdAt: string;
 }
 
 export interface PostType {
-  id: string;
-  createdBy: UserType;
+  _id: string;
+  createdBy: UserType | string;
   images: string[];
   caption: string;
   video?: string;
-  likes: number;
-  comments: { id: string; user: string; text: string }[];
+  comments: CommentType[];
+  reactions: ReactionSummary;
   createdAt: string;
 }

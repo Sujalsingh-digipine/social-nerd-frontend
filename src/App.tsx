@@ -7,9 +7,9 @@ import HomeFeed from "./modules/feed/Feed";
 const App = () => {
   return (
     <Routes>
-      <Route path="/register" element={<RegisterForm />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/home" element={<HomeFeed />} />
+      <Route path="/auth/register" element={<RegisterForm />} />
+      <Route path="/auth/login" element={<Login />} />
+      <Route path="/" element={<HomeFeed />} />
     </Routes>
   );
 };

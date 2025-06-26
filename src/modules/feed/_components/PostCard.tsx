@@ -10,34 +10,101 @@ import {
   List,
   Carousel,
 } from "antd";
-import { CommentOutlined, HeartOutlined, HeartFilled } from "@ant-design/icons";
-import { PostType } from "../@types/post";
+import { CommentOutlined, HeartOutlined } from "@ant-design/icons";
+import { PostType, ReactionType } from "../@types/post";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const { Text } = Typography;
 
 export default function PostCard({ post }: { post: PostType }) {
-  const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState(post.likes);
+  const [reaction, setReaction] = useState<ReactionType | null>(
+    post.reactions.userReaction || null
+  );
+  const [reactionSummary, setReactionSummary] = useState(post.reactions);
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState(post.comments);
-  const [reaction, setReaction] = useState<string | null>(null);
   const [showReactions, setShowReactions] = useState(false);
 
-  const handleLike = () => {
-    setLiked((prev) => !prev);
-    setLikes((prev) => (liked ? prev - 1 : prev + 1));
+  const emojiReactions: ReactionType[] = [
+    "Like",
+    "Love",
+    "Haha",
+    "Wow",
+    "Sad",
+    "Angry",
+  ];
+  const emojiMap: Record<ReactionType, string> = {
+    Like: "👍",
+    Love: "❤️",
+    Haha: "😂",
+    Wow: "😮",
+    Sad: "😢",
+    Angry: "😡",
   };
-  const reactions = ["👍", "❤️", "😂", "😮", "😢", "😡"];
+
+  const handleDefaultLike = () => {
+    if (reaction) {
+      setReaction(null);
+      setReactionSummary((prev) => {
+        const updatedTypeCount = { ...prev.typeCount };
+        updatedTypeCount[reaction] = (updatedTypeCount[reaction] || 1) - 1;
+        if (updatedTypeCount[reaction] <= 0) delete updatedTypeCount[reaction];
+
+        return {
+          ...prev,
+          total: prev.total - 1,
+          typeCount: updatedTypeCount,
+          userReaction: undefined,
+        };
+      });
+    } else {
+      const newReaction: ReactionType = "Like";
+      setReaction(newReaction);
+      setReactionSummary((prev) => ({
+        ...prev,
+        total: prev.total + 1,
+        typeCount: {
+          ...prev.typeCount,
+          [newReaction]: (prev.typeCount[newReaction] || 0) + 1,
+        },
+        userReaction: newReaction,
+      }));
+    }
+  };
+
+  const handleEmojiReact = (emo: ReactionType) => {
+    const previous = reaction;
+    setReaction(emo);
+    setReactionSummary((prev) => {
+      const updatedTypeCount = { ...prev.typeCount };
+
+      if (previous) {
+        updatedTypeCount[previous] = (updatedTypeCount[previous] || 1) - 1;
+        if (updatedTypeCount[previous] <= 0) delete updatedTypeCount[previous];
+      } else {
+        prev.total += 1;
+      }
+
+      updatedTypeCount[emo] = (updatedTypeCount[emo] || 0) + 1;
+
+      return {
+        total: previous ? prev.total : prev.total + 1,
+        typeCount: updatedTypeCount,
+        userReaction: emo,
+      };
+    });
+    setShowReactions(false);
+  };
+
   const handleCommentSubmit = () => {
     if (!commentText.trim()) return;
-
     const newComment = {
-      id: Date.now().toString(),
+      _id: Date.now().toString(),
       user: "You",
       text: commentText,
+      createdAt: "Now",
     };
     setComments((prev) => [...prev, newComment]);
     setCommentText("");
@@ -66,13 +133,17 @@ export default function PostCard({ post }: { post: PostType }) {
             />
           ))}
         </Carousel>
-        <div className="flex items-center gap-3 mb-3">
-          <Avatar src={post.createdBy.avatar} size="large" />
-          <div>
-            <Text strong>{post.createdBy.name}</Text>
-            <div className="text-sm text-gray-500">{post.createdAt}</div>
+
+        {typeof post.createdBy === "object" && (
+          <div className="flex items-center gap-3 mb-3">
+            <Avatar src={post.createdBy.avatar} size="large" />
+            <div>
+              <Text strong>{post.createdBy.username}</Text>
+              <div className="text-sm text-gray-500">{post.createdAt}</div>
+            </div>
           </div>
-        </div>
+        )}
+
         <Text>{post.caption}</Text>
 
         <Divider className="my-3" />
@@ -87,16 +158,14 @@ export default function PostCard({ post }: { post: PostType }) {
               whileTap={{ scale: 1.3 }}
               transition={{ type: "spring", stiffness: 300 }}
               className="cursor-pointer text-lg"
-              onClick={handleLike}
+              onClick={handleDefaultLike}
             >
               {reaction ? (
-                <span className="text-xl">{reaction}</span>
-              ) : liked ? (
-                <HeartFilled style={{ color: "red" }} />
+                <span className="text-xl">{emojiMap[reaction]}</span>
               ) : (
                 <HeartOutlined />
               )}{" "}
-              {likes}
+              {reactionSummary.total}
             </motion.div>
 
             <AnimatePresence>
@@ -108,19 +177,14 @@ export default function PostCard({ post }: { post: PostType }) {
                   transition={{ duration: 0.2 }}
                   className="absolute bottom-8 left-0 flex gap-2 bg-white p-2 rounded-full shadow-lg z-10"
                 >
-                  {reactions.map((emo) => (
+                  {emojiReactions.map((emo) => (
                     <motion.div
                       key={emo}
                       whileHover={{ scale: 1.3 }}
-                      onClick={() => {
-                        setReaction(emo);
-                        if (!liked) setLikes((prev) => prev + 1);
-                        setLiked(true);
-                        setShowReactions(false);
-                      }}
+                      onClick={() => handleEmojiReact(emo)}
                       className="cursor-pointer text-xl"
                     >
-                      {emo}
+                      {emojiMap[emo]}
                     </motion.div>
                   ))}
                 </motion.div>
@@ -136,9 +200,14 @@ export default function PostCard({ post }: { post: PostType }) {
           </Text>
         </Space>
 
-        {lastComment && !showComments && (
+        {typeof post.comments === "object" && lastComment && !showComments && (
           <div className="mt-3 text-sm text-gray-600">
-            <strong>{lastComment.user}:</strong> {lastComment.text}
+            {typeof lastComment.user === "string" ? (
+              <strong>{lastComment.user}:</strong>
+            ) : (
+              <strong>{lastComment.user.username}:</strong>
+            )}{" "}
+            {lastComment.text}
           </div>
         )}
 
@@ -158,7 +227,13 @@ export default function PostCard({ post }: { post: PostType }) {
                 renderItem={(comment) => (
                   <List.Item className="px-0">
                     <Text>
-                      <strong>{comment.user}:</strong> {comment.text}
+                      <strong>
+                        {typeof comment.user === "string"
+                          ? comment.user
+                          : comment.user.username}
+                        :
+                      </strong>{" "}
+                      {comment.text}
                     </Text>
                   </List.Item>
                 )}

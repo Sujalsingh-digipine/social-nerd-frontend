@@ -26,7 +26,7 @@ export default function HomeFeed() {
       {loading ? (
         <Spin size="large" />
       ) : (
-        posts.map((post) => <PostCard key={post.id} post={post} />)
+        posts.map((post) => <PostCard key={post._id} post={post} />)
       )}
     </div>
   );

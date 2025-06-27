@@ -22,11 +22,8 @@ export default function HomeFeed() {
 
   return (
     <div className="flex flex-col items-center p-4 gap-8">
-      {loading ? (
-        <Spin size="large" />
-      ) : (
-        posts.map((post) => <PostCard key={post._id} post={post} />)
-      )}
+      {loading && <Spin size="large" />}
+      {!loading && posts.map((post) => <PostCard key={post._id} post={post} />)}
     </div>
   );
 }

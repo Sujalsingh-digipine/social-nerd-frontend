@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { Alert, Button } from "antd";
 import "antd/dist/reset.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useAlert } from "../../hooks/useAlert";
 
 const RegisterSchema = Yup.object().shape({
   username: Yup.string().min(3).required("Username is required"),
@@ -15,10 +15,7 @@ const RegisterSchema = Yup.object().shape({
 });
 
 export default function RegisterForm() {
-  const [alert, setAlert] = useState<{
-    type: "success" | "error" | null;
-    message: string;
-  } | null>(null);
+  const { alert, showAlert, hideAlert } = useAlert();
   const navigate = useNavigate();
 
   const initialValues = {
@@ -34,14 +31,14 @@ export default function RegisterForm() {
   ) => {
     try {
       console.log("Form Values", values);
-      setAlert({ type: "success", message: "Registration successful!" });
+      showAlert("success", "Registration Successfully");
       resetForm();
-      navigate("/login");
-      setTimeout(() => setAlert(null), 3000);
+      navigate("/auth/login");
     } catch (error) {
       console.error("Registration error:", error);
-      setAlert({ type: "error", message: "Something went wrong" });
-      setTimeout(() => setAlert(null), 3000);
+      showAlert("error", "Error in Registration");
+    } finally {
+      setTimeout(() => hideAlert(), 3000);
     }
   };
 
@@ -63,13 +60,7 @@ export default function RegisterForm() {
           </div>
 
           {alert && (
-            <Alert
-              type={alert.type as "success" | "error"}
-              message={alert.message}
-              showIcon
-              closable
-              onClose={() => setAlert(null)}
-            />
+            <Alert type={alert.type} message={alert.message} showIcon />
           )}
 
           <Formik

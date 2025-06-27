@@ -8,6 +8,8 @@ import {
   Input,
   Button,
   List,
+  Row,
+  Col,
   Carousel,
 } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
@@ -22,7 +24,7 @@ export default function PostCard({ post }: { post: PostType }) {
     post.reactions.userReaction || null
   );
   const [reactionSummary, setReactionSummary] = useState(post.reactions);
-  const [showComments, setShowComments] = useState(false);
+  const [showAllComments, setShowAllComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState(post.comments);
   const [showReactions, setShowReactions] = useState(false);
@@ -93,120 +95,90 @@ export default function PostCard({ post }: { post: PostType }) {
     setCommentText("");
   };
 
-  const lastComment = comments[comments.length - 1];
+  const visibleComments = showAllComments ? comments : comments.slice(0, 1);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.98, y: 30 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-    >
-      <Card className="w-full max-w-xl rounded-2xl shadow-md border border-gray-200">
-        <Carousel
-          dotPosition="bottom"
-          className="rounded-lg overflow-hidden mb-4"
-        >
-          {post.images.map((url, idx) => (
-            <Image
-              key={idx}
-              src={url}
-              alt={`post-${idx}`}
-              className="h-96 w-full object-cover"
-              preview={false}
-            />
-          ))}
-        </Carousel>
+    <Card className="w-full max-w-4xl">
+      <Row gutter={16}>
+        <Col xs={24} md={12}>
+          <Carousel
+            dotPosition="bottom"
+            className="rounded-lg overflow-hidden mb-4"
+          >
+            {post.images.map((url, idx) => (
+              <Image
+                key={idx}
+                src={url}
+                alt={`post-${idx}`}
+                className="w-full h-auto object-cover mb-2 rounded-lg"
+              />
+            ))}
+          </Carousel>
+        </Col>
 
-        {typeof post.createdBy === "object" && (
-          <div className="flex items-center gap-3 mb-3">
-            <Avatar src={post.createdBy.avatar} size="large" />
+        <Col xs={24} md={12}>
+          <div className="flex items-center gap-3 mb-4">
+            {/* <Avatar src={post.createdBy.} size="large" /> */}
             <div>
-              <Text strong>{post.createdBy.username}</Text>
+              {/* <Text strong>{post.createdBy.username}</Text> */}
               <div className="text-sm text-gray-500">{post.createdAt}</div>
             </div>
           </div>
-        )}
 
-        <Text>{post.caption}</Text>
+          <Text className="block mb-4">{post.caption}</Text>
 
-        <Divider className="my-3" />
+          <Divider className="my-3" />
 
-        <Space size="large" className="mt-4">
-          <div
-            className="relative"
-            onMouseEnter={() => setShowReactions(true)}
-            onMouseLeave={() => setShowReactions(false)}
-          >
-            <motion.div
-              whileTap={{ scale: 1.3 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="cursor-pointer text-lg"
-              onClick={handleDefaultLike}
+          <Space size="large" className="mb-4">
+            <div
+              className="relative"
+              onMouseEnter={() => setShowReactions(true)}
+              onMouseLeave={() => setShowReactions(false)}
             >
-              {reaction ? (
-                <span className="text-xl">{reaction}</span>
-              ) : (
-                <HeartOutlined />
-              )}{" "}
-              {reactionSummary.total}
-            </motion.div>
+              <motion.div
+                whileTap={{ scale: 1.3 }}
+                className="cursor-pointer text-lg"
+                onClick={handleDefaultLike}
+              >
+                {reaction ? (
+                  <span className="text-xl">{reaction}</span>
+                ) : (
+                  <HeartOutlined />
+                )}{" "}
+                {reactionSummary.total}
+              </motion.div>
 
-            <AnimatePresence>
-              {showReactions && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute bottom-8 left-0 flex gap-2 bg-white p-2 rounded-full shadow-lg z-10"
-                >
-                  {Object.values(Reaction).map((emoji) => (
-                    <motion.div
-                      key={emoji}
-                      whileHover={{ scale: 1.3 }}
-                      onClick={() => handleEmojiReact(emoji as Reaction)}
-                      className="cursor-pointer text-xl"
-                    >
-                      {emoji}
-                    </motion.div>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+              <AnimatePresence>
+                {showReactions && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute bottom-8 left-0 flex gap-2 bg-white p-2 rounded-full shadow-lg z-10"
+                  >
+                    {Object.values(Reaction).map((emoji) => (
+                      <motion.div
+                        key={emoji}
+                        whileHover={{ scale: 1.3 }}
+                        onClick={() => handleEmojiReact(emoji as Reaction)}
+                        className="cursor-pointer text-xl"
+                      >
+                        {emoji}
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-          <Text
-            onClick={() => setShowComments((prev) => !prev)}
-            className="cursor-pointer"
-          >
-            💬 {comments.length}
-          </Text>
-        </Space>
+            <Text className="cursor-pointer">💬 {comments.length}</Text>
+          </Space>
 
-        {typeof post.comments === "object" && lastComment && !showComments && (
-          <div className="mt-3 text-sm text-gray-600">
-            {typeof lastComment.user === "string" ? (
-              <strong>{lastComment.user}:</strong>
-            ) : (
-              <strong>{lastComment.user.username}:</strong>
-            )}{" "}
-            {lastComment.text}
-          </div>
-        )}
-
-        <AnimatePresence>
-          {showComments && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="mt-4"
-            >
+          {comments.length > 0 && (
+            <>
               <List
-                dataSource={comments}
+                dataSource={visibleComments}
                 size="small"
-                bordered={false}
                 renderItem={(comment) => (
                   <List.Item className="px-0">
                     <Text>
@@ -221,21 +193,35 @@ export default function PostCard({ post }: { post: PostType }) {
                   </List.Item>
                 )}
               />
-              <Space.Compact className="mt-3 w-full" block>
-                <Input
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="Add a comment..."
-                  className="rounded-l-lg"
-                />
-                <Button type="primary" onClick={handleCommentSubmit}>
-                  Post
+
+              {comments.length > 1 && (
+                <Button
+                  type="text"
+                  size="small"
+                  onClick={() => setShowAllComments(!showAllComments)}
+                  className="mb-3"
+                >
+                  {showAllComments
+                    ? "Show less"
+                    : `Show all (${comments.length})`}
                 </Button>
-              </Space.Compact>
-            </motion.div>
+              )}
+            </>
           )}
-        </AnimatePresence>
-      </Card>
-    </motion.div>
+
+          <Space.Compact className="w-full">
+            <Input
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              placeholder="Add a comment..."
+              onPressEnter={handleCommentSubmit}
+            />
+            <Button type="primary" onClick={handleCommentSubmit}>
+              Post
+            </Button>
+          </Space.Compact>
+        </Col>
+      </Row>
+    </Card>
   );
 }

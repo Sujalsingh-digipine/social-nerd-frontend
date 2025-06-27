@@ -5,9 +5,8 @@ import App from "../../App";
 const Layout = () => {
   const location = useLocation();
   const isAuthRoute =
-    location.pathname.includes("/login") ||
-    location.pathname.includes("/signup") ||
-    location.pathname.includes("/role");
+    location.pathname.includes("/auth/login") ||
+    location.pathname.includes("/auth/register");
 
   if (isAuthRoute) {
     return <App />;

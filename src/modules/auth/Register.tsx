@@ -1,8 +1,8 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Alert } from "antd";
+import { Alert, Button } from "antd";
 import "antd/dist/reset.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const RegisterSchema = Yup.object().shape({
@@ -19,6 +19,7 @@ export default function RegisterForm() {
     type: "success" | "error" | null;
     message: string;
   } | null>(null);
+  const navigate = useNavigate();
 
   const initialValues = {
     username: "",
@@ -35,6 +36,7 @@ export default function RegisterForm() {
       console.log("Form Values", values);
       setAlert({ type: "success", message: "Registration successful!" });
       resetForm();
+      navigate("/login");
       setTimeout(() => setAlert(null), 3000);
     } catch (error) {
       console.error("Registration error:", error);
@@ -84,6 +86,7 @@ export default function RegisterForm() {
                   <Field
                     type="text"
                     name="username"
+                    placeholder="Eg. john doe"
                     className="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                   />
                   <ErrorMessage
@@ -99,6 +102,7 @@ export default function RegisterForm() {
                   </label>
                   <Field
                     type="email"
+                    placeholder="Eg:johndoe@example.com"
                     name="email"
                     className="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                   />
@@ -116,6 +120,7 @@ export default function RegisterForm() {
                   <Field
                     type="password"
                     name="password"
+                    placeholder="******"
                     className="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                   />
                   <ErrorMessage
@@ -131,6 +136,7 @@ export default function RegisterForm() {
                   </label>
                   <Field
                     type="password"
+                    placeholder="******"
                     name="confirmPassword"
                     className="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                   />
@@ -142,19 +148,20 @@ export default function RegisterForm() {
                 </div>
 
                 <div>
-                  <button
-                    type="submit"
+                  <Button
+                    type="primary"
+                    htmlType="submit"
                     disabled={isSubmitting}
                     className="flex w-full justify-center rounded-md bg-pink-600 px-4 py-2 text-sm font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500"
                   >
                     {isSubmitting ? "Registering..." : "Register"}
-                  </button>
+                  </Button>
                 </div>
 
                 <p className="mt-10 text-center text-sm text-gray-500">
                   Already a member?{" "}
                   <Link
-                    to="/login"
+                    to="/auth/login"
                     className="font-semibold text-pink-600 hover:text-pink-500"
                   >
                     Sign in

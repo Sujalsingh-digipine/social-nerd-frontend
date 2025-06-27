@@ -13,6 +13,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { AiTwotoneMessage, AiOutlineHome } from "react-icons/ai";
+import { IoAddCircleOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -70,6 +71,9 @@ const Navbar = () => {
             <AiTwotoneMessage className="text-xl mt-[2px]" />
           </Badge>
         </Link>
+        <Button type="text" onClick={() => navigate("/add-posts")}>
+          <IoAddCircleOutline className="text-xl mt-[2px] " />
+        </Button>
       </div>
 
       <div className="flex items-center gap-4">

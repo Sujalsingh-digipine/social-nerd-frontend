@@ -10,7 +10,7 @@ import {
   List,
   Carousel,
 } from "antd";
-import { CommentOutlined, HeartOutlined } from "@ant-design/icons";
+import { HeartOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Reaction } from "../@enums/reaction.enum";
@@ -179,7 +179,7 @@ export default function PostCard({ post }: { post: PostType }) {
             onClick={() => setShowComments((prev) => !prev)}
             className="cursor-pointer"
           >
-            <CommentOutlined /> {comments.length}
+            💬 {comments.length}
           </Text>
         </Space>
 

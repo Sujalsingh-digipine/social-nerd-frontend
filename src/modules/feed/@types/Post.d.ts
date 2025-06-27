@@ -1,8 +1,6 @@
 import { Reaction } from "../@enums/reaction.enum";
 
 declare global {
-  // import { UserType } from "../../user/@types/user";
-
   export interface ReactionSummary {
     total: number;
     typeCount: Partial<Record<Reaction, number>>;

@@ -89,6 +89,9 @@ export const MOCK_POSTS = () => {
 
   for (let i = 0; i < 15; i++) {
     const base = basePosts[i % basePosts.length];
+
+    if (typeof base.createdBy === "string") continue;
+
     posts.push({
       ...base,
       _id: (i + 1).toString(),

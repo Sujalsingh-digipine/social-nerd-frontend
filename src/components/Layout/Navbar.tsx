@@ -1,41 +1,22 @@
 import {
   Avatar,
-  Badge,
   Dropdown,
   MenuProps,
   Space,
   Button,
-  List,
-  message,
+  Badge,
   Popover,
 } from "antd";
 import {
-  DownOutlined,
   LogoutOutlined,
   SettingOutlined,
   UserOutlined,
-  UserAddOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { AiTwotoneMessage, AiOutlineHome } from "react-icons/ai";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
-
-  const [friendRequests, setFriendRequests] = useState([
-    {
-      id: "1",
-      name: "John Doe",
-      avatar: "https://i.pravatar.cc/150?img=11",
-      status: "pending",
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      avatar: "https://i.pravatar.cc/150?img=14",
-      status: "pending",
-    },
-  ]);
 
   const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
     switch (key) {
@@ -58,55 +39,18 @@ const Navbar = () => {
     { type: "divider" },
     { label: "Logout", key: "logout", icon: <LogoutOutlined />, danger: true },
   ];
-
-  const handleAccept = (id: string) => {
-    setFriendRequests((prev) =>
-      prev.map((req) => (req.id === id ? { ...req, status: "accepted" } : req))
-    );
-    message.success("You are now friends.");
-  };
-
-  const handleDelete = (id: string) => {
-    setFriendRequests((prev) => prev.filter((req) => req.id !== id));
-    message.info("Friend request deleted.");
-  };
-
-  const friendPopoverContent = (
-    <List
-      dataSource={friendRequests}
-      locale={{ emptyText: "No Friend Requests" }}
-      renderItem={(item) => (
-        <List.Item
-          key={item.id}
-          actions={
-            item.status === "pending"
-              ? [
-                  <Button size="small" onClick={() => handleAccept(item.id)}>
-                    Accept
-                  </Button>,
-                  <Button
-                    danger
-                    size="small"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    Delete
-                  </Button>,
-                ]
-              : [
-                  <span className="text-green-600 text-sm font-medium">
-                    You are now friends
-                  </span>,
-                ]
-          }
-        >
-          <List.Item.Meta
-            avatar={<Avatar src={item.avatar} />}
-            title={item.name}
-          />
-        </List.Item>
-      )}
-    />
-  );
+  const friendRequests = [
+    {
+      _id: 1,
+      name: "John Doe",
+      avatar: "https://i.pravatar.cc/150?img=32",
+    },
+    {
+      _id: 2,
+      name: "Jane Doe",
+      avatar: "https://i.pravatar.cc/150?img=33",
+    },
+  ];
 
   return (
     <nav className="flex items-center justify-between px-6 py-3 bg-white shadow-md sticky top-0 z-50">
@@ -117,37 +61,54 @@ const Navbar = () => {
         SocialNerd
       </div>
 
-      <div className="hidden md:flex gap-6 text-gray-700">
+      <div className="flex gap-6 text-gray-700 items-center">
         <Button type="text" onClick={() => navigate("/")}>
-          Home
+          <AiOutlineHome className="text-xl mt-[2px]" />
         </Button>
-        <Button type="text" onClick={() => navigate("/explore")}>
-          Explore
-        </Button>
-        <Button type="text" onClick={() => navigate("/messages")}>
-          Messages
-        </Button>
+        <Link to="/messages">
+          <Badge count={5} size="small">
+            <AiTwotoneMessage className="text-xl mt-[2px]" />
+          </Badge>
+        </Link>
       </div>
 
-      {/* Right Section: Friend Requests + User Menu */}
-      <Space size="middle">
-        {/* Friend Request Badge */}
+      <div className="flex items-center gap-4">
         <Popover
-          content={friendPopoverContent}
-          title="Friend Requests"
-          trigger="click"
           placement="bottomRight"
-          getPopupContainer={(triggerNode) => triggerNode.parentElement!}
+          trigger={"click"}
+          content={
+            <div className="w-64">
+              <h4 className="font-semibold mb-2">Friend Requests</h4>
+              {friendRequests.map((user) => (
+                <div
+                  key={user._id}
+                  className="flex items-center justify-between mb-3"
+                >
+                  <div className="flex items-center gap-2">
+                    <Avatar size={"small"} src={user.avatar} />
+                    <span>{user.name}</span>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button type="primary" size="small">
+                      Accept
+                    </Button>
+                    <Button danger size="small">
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          }
         >
-          <Badge
-            count={friendRequests.filter((f) => f.status === "pending").length}
-            offset={[5, 0]}
-          >
-            <UserAddOutlined className="text-xl cursor-pointer text-gray-700" />
+          <Badge count={friendRequests.length} overflowCount={4} size="small">
+            <Avatar.Group>
+              <Avatar src="https://i.pravatar.cc/150?img=20" />
+              <Avatar src="https://i.pravatar.cc/150?img=12" />
+            </Avatar.Group>
           </Badge>
         </Popover>
 
-        {/* Avatar Dropdown */}
         <Dropdown
           menu={{ items, onClick: handleMenuClick }}
           placement="bottomRight"
@@ -155,10 +116,9 @@ const Navbar = () => {
         >
           <Space className="cursor-pointer">
             <Avatar src="https://i.pravatar.cc/150?img=13" />
-            <DownOutlined className="text-gray-600" />
           </Space>
         </Dropdown>
-      </Space>
+      </div>
     </nav>
   );
 };

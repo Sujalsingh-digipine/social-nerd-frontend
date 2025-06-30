@@ -4,7 +4,7 @@ declare global {
   export interface ReactionSummary {
     total: number;
     typeCount: Partial<Record<Reaction, number>>;
-    userReaction?: Reaction;
+    userReaction?: Reaction | null;
   }
 
   export interface CommentType {

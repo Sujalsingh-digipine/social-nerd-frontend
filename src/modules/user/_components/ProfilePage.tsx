@@ -4,6 +4,8 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { HiOutlineChatBubbleOvalLeftEllipsis } from "react-icons/hi2";
 import { TiUserAdd } from "react-icons/ti";
 import PostPreviewDialog from "../../feed/_components/PostPreview";
+import { MdModeEdit } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const samplePosts = Array.from(
   { length: 9 },
@@ -39,6 +41,12 @@ export const ProfilePage = () => {
     setPostOpen(true);
   };
 
+  const navigation = useNavigate();
+
+  const editPro = () => {
+    navigation("/edit-profile");
+  };
+
   const closePost = () => {
     setSelectedPost(null);
     setPostOpen(false);
@@ -66,12 +74,15 @@ export const ProfilePage = () => {
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-10 space-y-4 sm:space-y-0">
         <div className="flex justify-center sm:justify-start">
-          <Avatar
-            size={100}
-            src={user.avatar}
-            icon={<UserOutlined />}
-            className="border border-gray-300 shadow-md"
-          />
+          <div className="relative inline-block">
+            <Avatar
+              size={100}
+              src={user.avatar}
+              icon={<UserOutlined />}
+              className="border border-gray-300 shadow-md"
+            />
+            <span className="absolute bottom-1 right-1 block h-4 w-4 rounded-full bg-green-500 border-2 border-white"></span>
+          </div>
         </div>
 
         <div className="flex-1">
@@ -87,9 +98,11 @@ export const ProfilePage = () => {
             )}
           </div>
 
-          <p className="text-sm text-gray-600 mb-4">{user.email}</p>
-
           <div className="flex flex-wrap items-center gap-4">
+            <Button type="primary" className="mb-4" onClick={editPro}>
+              <MdModeEdit />
+              Edit Profile
+            </Button>
             <Button onClick={handleMessage} type="primary">
               <HiOutlineChatBubbleOvalLeftEllipsis />
               Message
@@ -105,10 +118,6 @@ export const ProfilePage = () => {
           </div>
         </div>
       </div>
-
-      <hr className="my-6 border-gray-300" />
-
-      <hr className="my-6 border-gray-300" />
 
       <Tabs defaultActiveKey="posts" className="mt-4">
         <Tabs.TabPane tab="Posts" key="posts">
@@ -167,7 +176,7 @@ export const ProfilePage = () => {
                     danger={friend.following}
                     onClick={() => toggleFollow(friend.id)}
                   >
-                    {friend.following ? "Unfollow" : "Follow"}
+                    {friend.following ? "Unfriend" : "Add Friend"}
                   </Button>,
                 ]}
               >

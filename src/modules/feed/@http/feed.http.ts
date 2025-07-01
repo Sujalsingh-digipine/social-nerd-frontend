@@ -10,7 +10,7 @@ async function _get_posts(): Promise<PaginatedResponse<PostType[]>> {
       success: true,
       message: "Posts fetched",
       data: {
-        items: MOCK_POSTS(),
+        items: MOCK_POSTS,
         total: 50,
         page: 1,
         limit: 10,

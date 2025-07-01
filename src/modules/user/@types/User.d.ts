@@ -1,5 +1,5 @@
 declare global {
-  import { UserStatus } from "../@enum/userstatus.enum";
+  import { UserStatus } from "../@enum/user-status.enum";
   export interface UserType {
     _id: string;
     username: string;

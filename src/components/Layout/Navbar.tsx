@@ -6,15 +6,18 @@ import {
   Button,
   Badge,
   Popover,
+  Tooltip,
 } from "antd";
 import {
   LogoutOutlined,
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { AiTwotoneMessage, AiOutlineHome } from "react-icons/ai";
+import { AiOutlineHome } from "react-icons/ai";
+import { IoAddCircleOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
-
+import { TbMessageCircleUser } from "react-icons/tb";
+import { AiOutlineUserAdd } from "react-icons/ai";
 const Navbar = () => {
   const navigate = useNavigate();
 
@@ -63,13 +66,26 @@ const Navbar = () => {
 
       <div className="flex gap-6 text-gray-700 items-center">
         <Button type="text" onClick={() => navigate("/")}>
-          <AiOutlineHome className="text-xl mt-[2px]" />
+          <Tooltip title="Home" placement="bottom" arrow={false}>
+            <AiOutlineHome className="text-xl mt-[2px]" />
+          </Tooltip>
         </Button>
         <Link to="/messages">
           <Badge count={5} size="small">
-            <AiTwotoneMessage className="text-xl mt-[2px]" />
+            <Tooltip title="Messages" placement="bottom" arrow={false}>
+              <TbMessageCircleUser className="text-xl mt-[2px]" />
+            </Tooltip>
           </Badge>
         </Link>
+         <Badge count={friendRequests.length} overflowCount={4} size="small">
+          <AiOutlineUserAdd size={20} />
+        </Badge>
+        <Button type="text" onClick={() => navigate("/add-posts")}>
+          <Tooltip title="Add Post" placement="bottom" arrow={false}>
+            <IoAddCircleOutline className="text-xl mt-[2px] " />
+          </Tooltip>
+        </Button>
+       
       </div>
 
       <div className="flex items-center gap-4">
@@ -100,14 +116,7 @@ const Navbar = () => {
               ))}
             </div>
           }
-        >
-          <Badge count={friendRequests.length} overflowCount={4} size="small">
-            <Avatar.Group>
-              <Avatar src="https://i.pravatar.cc/150?img=20" />
-              <Avatar src="https://i.pravatar.cc/150?img=12" />
-            </Avatar.Group>
-          </Badge>
-        </Popover>
+        ></Popover>
 
         <Dropdown
           menu={{ items, onClick: handleMenuClick }}
